@@ -3,8 +3,6 @@ package com.tamaized.voidfog;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.tamaized.voidfog.config.ConfigHandler;
-
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.event.client.ClientTickCallback;
 import net.fabricmc.loader.api.FabricLoader;
@@ -12,20 +10,17 @@ import net.minecraft.client.MinecraftClient;
 
 public class VoidFog implements ClientModInitializer {
 
-	public final static String VERSION = "${version}";
-	public static final String MOD_ID = "voidfog";
-
-	public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
+	public static final Logger LOGGER = LogManager.getLogger("voidfog");
 
 	public static final FogParticleSpawner particleSpawner = new FogParticleSpawner();
 	public static final FogColor fogColor = new FogColor();
 	public static final FogRenderer renderer = new FogRenderer();
 
-	public static ConfigHandler config = new ConfigHandler();
+	public static Settings config = new Settings();
 
     @Override
     public void onInitializeClient() {
-        config = ConfigHandler.load(FabricLoader.getInstance().getConfigDirectory().toPath().resolve("voidfog.json"));
+        config = Settings.load(FabricLoader.getInstance().getConfigDirectory().toPath().resolve("voidfog.json"));
         ClientTickCallback.EVENT.register(this::onTick);
     }
 

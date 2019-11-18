@@ -1,4 +1,4 @@
-package com.tamaized.voidfog.config;
+package com.tamaized.voidfog;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -9,9 +9,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
 import com.google.gson.annotations.Expose;
-import com.tamaized.voidfog.VoidFog;
 
-public class ConfigHandler {
+public class Settings {
 
     private static final Gson gson = new GsonBuilder()
             .setPrettyPrinting()
@@ -29,10 +28,10 @@ public class ConfigHandler {
 	@Expose
 	public boolean imABigBoi = false;
 
-	public static ConfigHandler load(Path path) {
+	public static Settings load(Path path) {
 	    if (Files.isReadable(path)) {
             try (BufferedReader s = Files.newBufferedReader(path)) {
-                ConfigHandler result = gson.fromJson(s, ConfigHandler.class);
+                Settings result = gson.fromJson(s, Settings.class);
 
                 if (result != null) {
                     return result.save(path);
@@ -41,14 +40,14 @@ public class ConfigHandler {
                 VoidFog.LOGGER.warn("Erorr whilst loading json config", e);
             }
         }
-	    return new ConfigHandler().save(path);
+	    return new Settings().save(path);
 	}
 
 	protected void validate() {
 	    voidParticleDensity = Math.max(0, voidParticleDensity);
 	}
 
-	public ConfigHandler save(Path path) {
+	public Settings save(Path path) {
 	    validate();
 	    try (BufferedWriter writer = Files.newBufferedWriter(path)) {
             gson.toJson(this, writer);
