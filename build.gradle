@@ -1,59 +1,69 @@
-buildscript {
-    repositories {
-        jcenter()
-        maven {
-            name = "forge"
-            url = "http://files.minecraftforge.net/maven"
-        }
-    }
-    dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
-    }
-}
-apply plugin: 'net.minecraftforge.gradle.forge'
+// Fabric build script
+// 03/06/2019
+// https://github.com/FabricMC/fabric-example-mod/blob/master/build.gradle
 
-repositories {
-	maven {
-		url = "http://dvs1.progwml6.com/files/maven"
-	}
+plugins {
+    id 'java-library'
+    id 'fabric-loom' version '0.2.5-SNAPSHOT'
+    id 'maven-publish'
 }
 
-version = "${modVersion}${modVersionValue}"
-group= "tamaized.voidfog"
+targetCompatibility = JavaVersion.VERSION_1_8
+sourceCompatibility = JavaVersion.VERSION_1_8
 
-sourceCompatibility = targetCompatibility = '1.8'
-compileJava {
-    sourceCompatibility = targetCompatibility = '1.8'
+version = "${project.minecraft_version}-${project.version}"
+
+if (project.release != 'RELEASE') {
+    version += "-${project.release}"
 }
+
+group = project.group
+description = project.displayname
+archivesBaseName = project.name
 
 minecraft {
-    version = "${project.minecraftVersion}-${project.forgeVersion}"
-    runDir = "run"
-    mappings = "${project.forgeMapping}"
-    makeObfSourceJar = false
-	useDepAts = true
-	replaceIn 'VoidFog.java'
-	replace '${version}', "${modVersion}${modVersionValue}"
+    refmapName = 'voidfog.mixin.refmap.json'
+}
+
+// check for updates every build when on CI
+if (System.env.CI) {
+    configurations.all {
+        resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+    }
 }
 
 dependencies {
-	deobfCompile "mezz.jei:${project.jeiVersion}:api"
-	runtime "mezz.jei:${project.jeiVersion}"
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings "net.fabricmc:yarn:${project.yarn_mappings}"
+    modApi "net.fabricmc:fabric-loader:${project.loader_version}"
+
+    compileOnly "com.google.code.findbugs:jsr305:3.0.2"
+
+    modApi "net.fabricmc.fabric-api:fabric-api-base:0.1.0+"
+    modApi "net.fabricmc.fabric-api:fabric-events-lifecycle-v0:0.1.0+"
+    modApi "net.fabricmc.fabric-api:fabric-resource-loader-v0:0.1.0+"
+
+    modImplementation "io.github.prospector.modmenu:ModMenu:1.6.2-93"
 }
 
 processResources {
     inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraftVersion
 
     from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
-		expand([
-			'version'		: project.modVersion+""+project.modVersionValue,
-			'mcversion'		: project.minecraftVersion
-        ])
+        include "fabric.mod.json"
+        expand "version": project.version
     }
-        
+
     from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
+        exclude "fabric.mod.json"
     }
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = "sources"
+    from sourceSets.main.allSource
 }
