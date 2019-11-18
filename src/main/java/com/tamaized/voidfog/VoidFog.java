@@ -7,6 +7,7 @@ import com.tamaized.voidfog.config.ConfigHandler;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.event.client.ClientTickCallback;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 
 public class VoidFog implements ClientModInitializer {
@@ -20,16 +21,23 @@ public class VoidFog implements ClientModInitializer {
 	public static final FogColor fogColor = new FogColor();
 	public static final FogRenderer renderer = new FogRenderer();
 
-	public static final ConfigHandler config = new ConfigHandler();
+	public static ConfigHandler config = new ConfigHandler();
 
     @Override
     public void onInitializeClient() {
+        config = ConfigHandler.load(FabricLoader.getInstance().getConfigDirectory().toPath().resolve("voidfog.json"));
         ClientTickCallback.EVENT.register(this::onTick);
     }
 
     private void onTick(MinecraftClient client) {
         if (!client.isPaused() && client.world != null && client.getCameraEntity() != null) {
-            particleSpawner.update(client.world, client.getCameraEntity());
+            if (config.enabled) {
+                particleSpawner.update(client.world, client.getCameraEntity());
+
+                if (config.imABigBoi) {
+                    particleSpawner.updateBigBoi(client.world, client.getCameraEntity());
+                }
+            }
         }
     }
 }

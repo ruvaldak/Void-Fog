@@ -5,26 +5,37 @@ import java.util.Random;
 import com.tamaized.voidfog.api.Voidable;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class FogParticleSpawner {
 
     private static final int RADIUS = 16;
-    private static final int MAX_PASSES = 1000;
+
+    private int timeToNextSound = 0;
+
+    private final SoundEvent[] events = new SoundEvent[] {
+            SoundEvents.ENTITY_POLAR_BEAR_WARNING,
+            SoundEvents.AMBIENT_CAVE,
+            SoundEvents.ENTITY_CREEPER_PRIMED,
+            SoundEvents.ENTITY_ZOMBIE_DESTROY_EGG,
+            SoundEvents.BLOCK_CHEST_CLOSE,
+            SoundEvents.UI_TOAST_IN,
+            SoundEvents.BLOCK_COMPOSTER_READY,
+            SoundEvents.BLOCK_METAL_STEP
+    };
 
     private BlockPos randomPos(Random rand) {
         return new BlockPos(rand.nextInt(RADIUS), rand.nextInt(RADIUS), rand.nextInt(RADIUS));
     }
 
     public void update(World world, Entity entity) {
-
-        if (!VoidFog.config.enabled) {
-            return;
-        }
-
         Voidable voidable = (Voidable)world.getDimension();
 
         if (!voidable.hasDepthFog(entity, world)) {
@@ -35,7 +46,7 @@ public class FogParticleSpawner {
 
         Random rand = world.getRandom();
 
-        for (int pass = 0; pass < MAX_PASSES; pass++) {
+        for (int pass = 0; pass < VoidFog.config.voidParticleDensity; pass++) {
             BlockPos pos = randomPos(rand).subtract(randomPos(rand)).add(playerPos);
             BlockState state = world.getBlockState(pos);
 
@@ -53,4 +64,43 @@ public class FogParticleSpawner {
         }
     }
 
+    public void updateBigBoi(World world, Entity entity) {
+
+        Voidable voidable = (Voidable)world.getDimension();
+
+        if (!voidable.hasDepthFog(entity, world)) {
+            return;
+        }
+
+        if (entity.y > 10) {
+            return;
+        }
+
+        int chance = 1 + Math.abs(100 * (int)entity.y);
+        float brightness = entity.getBrightnessAtEyes();
+
+        if (brightness <= 0.3F) {
+            if (timeToNextSound-- > 0) {
+                return;
+            }
+
+            timeToNextSound = world.random.nextInt(20 + chance / 3);
+
+            if (world.random.nextInt((int)(100 + chance * 3 * brightness)) == 0) {
+                doAScary(world, entity.getBlockPos());
+            }
+        }
+    }
+
+    private void doAScary(World world, BlockPos pos) {
+        SoundEvent event = events[world.random.nextInt(events.length)];
+        world.playSound(MinecraftClient.getInstance().player, pos, event, SoundCategory.AMBIENT, 2, 1);
+    }
 }
+
+
+
+
+
+
+
