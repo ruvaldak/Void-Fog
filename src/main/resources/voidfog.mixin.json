@@ -1,0 +1,11 @@
+{
+    "required": true,
+    "minVersion": "0.7",
+    "package": "com.tamaized.voidfog.mixin",
+    "refmap": "voidfog.mixin.refmap.json",
+    "compatibilityLevel": "JAVA_8",
+    "client": [
+    	"MixinBackgroundRenderer",
+    	"MixinDimension"
+    ]
+}

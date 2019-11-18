@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "id": "voidfog",
+  "version": "${version}",
+  "name": "Void Fog",
+  "description": "Brings back the old Void Fog.",
+  "authors": [
+    "Tamaized", "Sollace"
+  ],
+  "contact": {},
+  "license": "MIT",
+  "icon": "void_logo.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "com.tamaized.voidfog.VoidFog"
+    ]
+  },
+  "mixins": [
+    "voidfog.mixin.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.4.0",
+    "fabric-api-base": ">=0.1.0",
+    "fabric-events-lifecycle-v0": ">=0.1.0",
+    "fabric-resource-loader-v0": ">=0.1.0"
+  },
+  "suggests": {
+    "modmenu": "*"
+  }
+}

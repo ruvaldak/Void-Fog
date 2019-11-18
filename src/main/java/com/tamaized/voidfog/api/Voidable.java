@@ -1,0 +1,33 @@
+package com.tamaized.voidfog.api;
+
+import com.tamaized.voidfog.VoidFog;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import net.minecraft.world.level.LevelGeneratorType;
+
+public interface Voidable {
+
+    default int getDepthParticleRate(BlockPos pos) {
+        return pos.getY();
+    }
+
+    default boolean hasDepthFog(Entity entity, World world) {
+
+        if (entity.isSpectator() || (
+                   VoidFog.config.disableInCreative
+                && entity instanceof PlayerEntity
+                && ((PlayerEntity)entity).isCreative())) {
+            return false;
+        }
+
+        return (world.getLevelProperties().getGeneratorType() != LevelGeneratorType.FLAT
+                && !world.getDimension().isNether()
+            );
+    }
+
+    default boolean isVoidFogDisabled(Entity player, World world) {
+        return !hasDepthFog(player, world);
+    }
+}
