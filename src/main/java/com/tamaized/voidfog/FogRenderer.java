@@ -1,11 +1,12 @@
 package com.tamaized.voidfog;
 
-import com.mojang.blaze3d.platform.GLX;
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.tamaized.voidfog.api.Voidable;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.Camera;
+import net.minecraft.client.render.BackgroundRenderer.FogType;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -14,7 +15,7 @@ public class FogRenderer {
 
     private float lastFogDistance = 1000;
 
-    public void render(Camera camera, int fogMode) {
+    public void render(Camera camera,  FogType type, float viewDistance, boolean isThick) {
 
         if (!VoidFog.config.enabled) {
             return;
@@ -33,18 +34,14 @@ public class FogRenderer {
         distance = MathHelper.lerp(MinecraftClient.getInstance().getTickDelta() / 10, lastFogDistance, distance);
         lastFogDistance = distance;
 
-        GlStateManager.fogMode(GlStateManager.FogMode.LINEAR);
+        RenderSystem.fogMode(GlStateManager.FogMode.LINEAR);
+        RenderSystem.fogStart(getFogStart(distance, type, world, isThick));
+        RenderSystem.fogEnd(getFogEnd(distance, type, world, isThick));
+        RenderSystem.setupNvFogDistance();
 
-        boolean locationHasFog = world.getDimension().shouldRenderFog((int)entity.x, (int)entity.z)
-                              || MinecraftClient.getInstance().inGameHud.getBossBarHud().shouldThickenFog();
-
-        GlStateManager.fogStart(getFogStart(distance, fogMode, world, locationHasFog));
-        GlStateManager.fogEnd(getFogEnd(distance, fogMode, world, locationHasFog));
-        GLX.setupNvFogDistance();
-
-        GlStateManager.enableColorMaterial();
-        GlStateManager.enableFog();
-        GlStateManager.colorMaterial(1028, 4608);
+        RenderSystem.enableColorMaterial();
+        RenderSystem.enableFog();
+        RenderSystem.colorMaterial(1028, 4608);
     }
 
     private int getLightLevelU(Entity entity) {
@@ -52,7 +49,7 @@ public class FogRenderer {
     }
 
     private int getLightLevelV(Voidable voidable, World world, Entity entity) {
-        return voidable.isVoidFogDisabled(entity, world) ? 15 : ((int)entity.y + 4);
+        return voidable.isVoidFogDisabled(entity, world) ? 15 : ((int)entity.getY() + 4);
     }
 
     private float getFogDistance(World world, Entity entity) {
@@ -70,19 +67,19 @@ public class FogRenderer {
         return (float)Math.min(viewDistance, Math.max(100 * fogIntensity, 5));
     }
 
-    private float getFogStart(float intensity, int mode, World world, boolean loc) {
+    private float getFogStart(float intensity, FogType type, World world, boolean loc) {
         if (loc) {
             return intensity * 0.05F;
         }
 
-        if (mode == -1) {
+        if (type == FogType.FOG_SKY) {
             return 0;
         }
 
         return intensity * 0.75F;
     }
 
-    private float getFogEnd(float intensity, int mode, World world, boolean loc) {
+    private float getFogEnd(float intensity, FogType type, World world, boolean loc) {
         if (loc) {
             return Math.min(intensity, 192) / 2F;
         }

@@ -6,37 +6,51 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.tamaized.voidfog.VoidFog;
 
 import net.minecraft.client.render.BackgroundRenderer;
+import net.minecraft.client.render.BackgroundRenderer.FogType;
 import net.minecraft.client.render.Camera;
-import net.minecraft.world.World;
+import net.minecraft.client.world.ClientWorld;
 
 @Mixin(BackgroundRenderer.class)
 abstract class MixinBackgroundRenderer {
 
     @Shadow
-    private float red;
+    private static float red;
     @Shadow
-    private float green;
+    private static float green;
     @Shadow
-    private float blue;
+    private static float blue;
 
-    @Inject(method = "applyFog(Lnet/minecraft/client/render/Camera;I)V",
+    @Inject(method = "applyFog("
+            + "Lnet/minecraft/client/render/Camera;"
+            + "Lnet/minecraft/client/render/BackgroundRenderer$FogType;"
+            + "F"
+            + "Z"
+        + ")V",
             at = @At("RETURN"))
-    public void onApplyFog(Camera camera, int mode, CallbackInfo info) {
-        VoidFog.renderer.render(camera, mode);
+    private static void onApplyFog(Camera camera, FogType type, float viewDistance, boolean isThick, CallbackInfo info) {
+        VoidFog.renderer.render(camera, type, viewDistance, isThick);
     }
 
-    @Inject(method = "updateColorNotInWater(Lnet/minecraft/client/render/Camera;Lnet/minecraft/world/World;F)V",
+    @Inject(method = "render("
+            + "Lnet/minecraft/client/render/Camera;"
+            + "F"
+            + "Lnet/minecraft/client/world/ClientWorld;"
+            + "I"
+            + "F"
+        + ")V",
             at = @At("RETURN"))
-    private void onUpdateColorNotInWater(Camera camera, World world, float ticks, CallbackInfo info) {
+    private static void onUpdateColorNotInWater(Camera camera, float ticks, ClientWorld world, int i, float g, CallbackInfo info) {
         changeFogColour(VoidFog.fogColor.getFogBrightness(world, camera.getFocusedEntity(), ticks));
     }
 
-    private void changeFogColour(double factor) {
+    private static void changeFogColour(double factor) {
         red *= factor;
         green *= factor;
         blue *= factor;
+        RenderSystem.clearColor(red, green, blue, 0);
     }
 }

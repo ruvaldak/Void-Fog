@@ -19,7 +19,7 @@ public class FogColor {
             return 0;
         }
 
-        double brightness = entity.prevY + (entity.y - entity.prevY) * partialTick * world.getDimension().getHorizonShadingRatio();
+        double brightness = entity.prevY + (entity.getY() - entity.prevY) * partialTick * world.getDimension().getHorizonShadingRatio();
 
         if (brightness >= 1) {
             return 1;

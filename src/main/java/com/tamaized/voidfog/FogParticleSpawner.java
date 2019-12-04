@@ -72,11 +72,11 @@ public class FogParticleSpawner {
             return;
         }
 
-        if (entity.y > 10) {
+        if (entity.getY() > 10) {
             return;
         }
 
-        int chance = 1 + Math.abs(100 * (int)entity.y);
+        int chance = 1 + Math.abs(100 * (int)entity.getY());
         float brightness = entity.getBrightnessAtEyes();
 
         if (brightness <= 0.3F) {
