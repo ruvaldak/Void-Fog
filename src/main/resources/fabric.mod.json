@@ -9,11 +9,14 @@
   ],
   "contact": {},
   "license": "MIT",
-  "icon": "void_logo.png",
+  "icon": "voidfog_logo.png",
   "environment": "client",
   "entrypoints": {
     "client": [
       "com.tamaized.voidfog.VoidFog"
+    ],
+    "modmenu": [
+      "com.tamaized.voidfog.modmenu.VFModMenuFactory"
     ]
   },
   "mixins": [

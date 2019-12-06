@@ -11,7 +11,15 @@ plugins {
 targetCompatibility = JavaVersion.VERSION_1_8
 sourceCompatibility = JavaVersion.VERSION_1_8
 
-version = "${project.minecraft_version}-${project.version}"
+version = project.version
+
+if (System.env.TRAVIS_BRANCH != project.minecraft_version) {
+    version += "-${project.minecraft_version}"
+}
+
+if (System.env.TRAVIS_BRANCH != null && System.env.TRAVIS_BRANCH != 'master') {
+    version += "-${System.env.TRAVIS_BRANCH}"
+}
 
 if (project.release != 'RELEASE') {
     version += "-${project.release}"
@@ -32,6 +40,17 @@ if (System.env.CI) {
     }
 }
 
+repositories {
+    maven {
+        name = 'minelp'
+        url = 'http://repo.minelittlepony-mod.com/maven/snapshot'
+    }
+    maven {
+        name = 'minelp-release'
+        url = 'http://repo.minelittlepony-mod.com/maven/release'
+    }
+}
+
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings "net.fabricmc:yarn:${project.yarn_mappings}"
@@ -43,7 +62,10 @@ dependencies {
     modApi "net.fabricmc.fabric-api:fabric-events-lifecycle-v0:0.1.2+"
     modApi "net.fabricmc.fabric-api:fabric-resource-loader-v0:0.1.8+"
 
-    //modImplementation "io.github.prospector.modmenu:ModMenu:1.6.2-93"
+    modApi "com.minelittlepony:Kirin:${project.kirin_version}"
+    include "com.minelittlepony:Kirin:${project.kirin_version}"
+
+    modImplementation "io.github.prospector:modmenu:${project.modmenu_version}"
 }
 
 processResources {

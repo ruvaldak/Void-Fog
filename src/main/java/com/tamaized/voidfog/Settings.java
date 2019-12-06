@@ -8,7 +8,6 @@ import java.nio.file.Path;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
-import com.google.gson.annotations.Expose;
 
 public class Settings {
 
@@ -16,17 +15,27 @@ public class Settings {
             .setPrettyPrinting()
             .create();
 
-    @Expose
 	public boolean enabled = true;
 
-	@Expose
 	public boolean disableInCreative = true;
 
-	@Expose
 	public int voidParticleDensity = 1000;
 
-	@Expose
 	public boolean imABigBoi = false;
+
+	private transient Path path;
+
+	public float setParticleDensity(float density) {
+	    density = density > 9997 ? 10000 : density < 3 ? 0 : density;
+
+	    if (Math.abs(density - 1000) < 30) {
+	        density = 1000;
+	    }
+
+	    voidParticleDensity = (int)density;
+
+	    return voidParticleDensity;
+	}
 
 	public static Settings load(Path path) {
 	    if (Files.isReadable(path)) {
@@ -47,7 +56,8 @@ public class Settings {
 	    voidParticleDensity = Math.max(0, voidParticleDensity);
 	}
 
-	public Settings save(Path path) {
+	private Settings save(Path path) {
+	    this.path = path;
 	    validate();
 	    try (BufferedWriter writer = Files.newBufferedWriter(path)) {
             gson.toJson(this, writer);
@@ -55,5 +65,9 @@ public class Settings {
             VoidFog.LOGGER.warn("Error whilst saving Json config", e);
         }
 	    return this;
+	}
+
+	public void save() {
+	    save(path);
 	}
 }
