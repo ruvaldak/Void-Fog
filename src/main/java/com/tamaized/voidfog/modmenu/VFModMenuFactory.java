@@ -1,4 +1,4 @@
-package com.tamaized.voidfog.modmenu;
+/*package com.tamaized.voidfog.modmenu;
 
 import net.minecraft.client.gui.screen.Screen;
 
@@ -18,3 +18,4 @@ public class VFModMenuFactory implements ModMenuApi {
         return OptionsScreen::new;
     }
 }
+*/
