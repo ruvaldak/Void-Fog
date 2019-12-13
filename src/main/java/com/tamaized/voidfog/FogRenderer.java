@@ -60,15 +60,16 @@ public class FogRenderer {
         Voidable voidable = (Voidable)world.getDimension();
 
         float viewDistance = MinecraftClient.getInstance().gameRenderer.getViewDistance();
-        double fogIntensity = getLightLevelU(entity) / 16D
-                            + getLightLevelV(voidable, world, entity) / 32D;
+        double maxHeight = 32 * (world.getDifficulty().getId() + 1);
+        double fogDistance = getLightLevelU(entity) / 16D
+                            + getLightLevelV(voidable, world, entity) / maxHeight;
 
-        if (fogIntensity >= 1) {
+        if (fogDistance >= 1) {
             return viewDistance;
         }
-        fogIntensity = Math.pow(Math.max(fogIntensity, 0), 2);
+        fogDistance = Math.pow(Math.max(fogDistance, 0), 2);
 
-        return (float)Math.min(viewDistance, Math.max(100 * fogIntensity, 5));
+        return (float)Math.min(viewDistance, Math.max(100 * fogDistance, 5));
     }
 
     private float getFogStart(float intensity, FogType type, World world, boolean loc) {

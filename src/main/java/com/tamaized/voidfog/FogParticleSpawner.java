@@ -28,7 +28,8 @@ public class FogParticleSpawner {
             SoundEvents.BLOCK_CHEST_CLOSE,
             SoundEvents.UI_TOAST_IN,
             SoundEvents.BLOCK_COMPOSTER_READY,
-            SoundEvents.BLOCK_METAL_STEP
+            SoundEvents.BLOCK_METAL_STEP,
+            SoundEvents.UI_BUTTON_CLICK
     };
 
     private BlockPos randomPos(Random rand) {
@@ -51,7 +52,7 @@ public class FogParticleSpawner {
             BlockState state = world.getBlockState(pos);
 
             if (state.isAir()) {
-                if (rand.nextInt(8) > voidable.getDepthParticleRate(pos)) {
+                if (rand.nextInt(8 * (world.getDifficulty().getId() + 1)) > voidable.getDepthParticleRate(pos)) {
                     world.addParticle(ParticleTypes.MYCELIUM,
                             pos.getX() + rand.nextFloat(),
                             pos.getY() + rand.nextFloat(),
