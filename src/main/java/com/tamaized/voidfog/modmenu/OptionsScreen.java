@@ -44,6 +44,11 @@ class OptionsScreen extends GameGui {
             .getStyle()
                 .setText("menu.voidfog.creative");
 
+        addButton(new Toggle(left, row += 25, config.respectTorches))
+            .onChange(enabled -> config.respectTorches = enabled)
+            .getStyle()
+                .setText("menu.voidfog.torches");
+
         addButton(new Toggle(left, row += 25, config.imABigBoi))
             .onChange(enabled -> config.imABigBoi = enabled)
             .getStyle()

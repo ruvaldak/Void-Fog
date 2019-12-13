@@ -15,7 +15,7 @@
     "client": [
       "com.tamaized.voidfog.VoidFog"
     ],
-    "__disabled__modmenu": [
+    "modmenu": [
       "com.tamaized.voidfog.modmenu.VFModMenuFactory"
     ]
   },

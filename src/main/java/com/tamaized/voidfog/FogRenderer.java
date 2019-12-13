@@ -9,6 +9,7 @@ import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.BackgroundRenderer.FogType;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 
 public class FogRenderer {
@@ -45,11 +46,14 @@ public class FogRenderer {
     }
 
     private int getLightLevelU(Entity entity) {
-        return entity.world.getLightLevel(entity.getBlockPos());
+        if (VoidFog.config.respectTorches) {
+            return entity.world.getLightLevel(entity.getBlockPos());
+        }
+        return entity.world.getLightLevel(LightType.SKY, entity.getBlockPos());
     }
 
-    private int getLightLevelV(Voidable voidable, World world, Entity entity) {
-        return voidable.isVoidFogDisabled(entity, world) ? 15 : ((int)entity.getY() + 4);
+    private double getLightLevelV(Voidable voidable, World world, Entity entity) {
+        return voidable.isVoidFogDisabled(entity, world) ? 15D : ((int)entity.getY() + 4D);
     }
 
     private float getFogDistance(World world, Entity entity) {

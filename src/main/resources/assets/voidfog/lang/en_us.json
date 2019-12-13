@@ -2,6 +2,7 @@
 	"menu.voidfog.title": "Void Fog Options",
 	"menu.voidfog.enabled": "Enable Fog",
 	"menu.voidfog.creative": "Disable in Creative",
+	"menu.voidfog.torches": "Hide in Lit Areas",
 	"menu.voidfog.particles.min": "No Particles",
 	"menu.voidfog.particles.max": "ALL The Particles",
 	"menu.voidfog.particles.default": "Particles: Default",

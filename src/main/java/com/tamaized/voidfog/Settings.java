@@ -19,6 +19,8 @@ public class Settings {
 
 	public boolean disableInCreative = true;
 
+	public boolean respectTorches = true;
+
 	public int voidParticleDensity = 1000;
 
 	public boolean imABigBoi = false;
