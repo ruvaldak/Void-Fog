@@ -43,7 +43,7 @@ public class FogParticleSpawner {
             return;
         }
 
-        BlockPos playerPos = entity.getBlockPos();
+        BlockPos playerPos = entity.getSenseCenterPos();
 
         Random rand = world.getRandom();
 
@@ -88,7 +88,7 @@ public class FogParticleSpawner {
             timeToNextSound = world.random.nextInt(20 + chance / 3);
 
             if (world.random.nextInt((int)(100 + chance * 3 * brightness)) == 0) {
-                doAScary(world, entity.getBlockPos());
+                doAScary(world, entity.getSenseCenterPos());
             }
         }
     }
