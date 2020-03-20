@@ -23,6 +23,11 @@ public class FogRenderer {
         }
 
         Entity entity = camera.getFocusedEntity();
+
+        if (entity.hasVehicle()) {
+            entity = entity.getRootVehicle();
+        }
+
         World world = entity.getEntityWorld();
         Voidable voidable = (Voidable)world.getDimension();
 

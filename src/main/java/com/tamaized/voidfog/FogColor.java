@@ -12,13 +12,17 @@ public class FogColor {
     private double prevBrightness;
 
     public double getFogBrightness(World world, Entity entity, float delta) {
+        if (entity.hasVehicle()) {
+            entity = entity.getRootVehicle();
+        }
+
         double brightness = computeBrightness(world, entity, delta);
         double lerped = MathHelper.lerp(delta / (brightness > prevBrightness ? 10 : 2), prevBrightness, brightness);
         prevBrightness = brightness;
         return lerped;
     }
 
-    public double computeBrightness(World world, Entity entity, float delta) {
+    private double computeBrightness(World world, Entity entity, float delta) {
 
         if (!VoidFog.config.enabled) {
             return 1;
@@ -38,6 +42,7 @@ public class FogColor {
         }
 
         float light = entity.world.getLightLevel(LightType.SKY, entity.getSenseCenterPos()) / 15F;
+        System.out.println(entity.world.getLightLevel(entity.getSenseCenterPos()));
 
         brightness *= light;
 
