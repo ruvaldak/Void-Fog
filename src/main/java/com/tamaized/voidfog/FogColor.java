@@ -3,11 +3,22 @@ package com.tamaized.voidfog;
 import com.tamaized.voidfog.api.Voidable;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 
 public class FogColor {
 
-    public double getFogBrightness(World world, Entity entity, float partialTick) {
+    private double prevBrightness;
+
+    public double getFogBrightness(World world, Entity entity, float delta) {
+        double brightness = computeBrightness(world, entity, delta);
+        double lerped = MathHelper.lerp(delta / (brightness > prevBrightness ? 10 : 2), prevBrightness, brightness);
+        prevBrightness = brightness;
+        return lerped;
+    }
+
+    public double computeBrightness(World world, Entity entity, float delta) {
 
         if (!VoidFog.config.enabled) {
             return 1;
@@ -19,14 +30,17 @@ public class FogColor {
             return 1;
         }
 
-        double brightness = entity.prevY + (entity.getY() - entity.prevY) * partialTick * world.getDimension().getHorizonShadingRatio();
+        double yPosition = MathHelper.lerp(delta, entity.prevY, entity.getY());
+        double brightness = yPosition * world.getDimension().getHorizonShadingRatio();
 
         if (brightness >= 1) {
             return 1;
         }
 
-        brightness = Math.pow(Math.max(0, brightness), 2);
+        float light = entity.world.getLightLevel(LightType.SKY, entity.getSenseCenterPos()) / 15F;
 
-        return brightness;
+        brightness *= light;
+
+        return Math.pow(Math.max(0, brightness), 3);
     }
 }

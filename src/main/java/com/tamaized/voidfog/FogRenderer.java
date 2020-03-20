@@ -32,7 +32,10 @@ public class FogRenderer {
 
         float distance = getFogDistance(world, entity);
 
-        distance = MathHelper.lerp(MinecraftClient.getInstance().getTickDelta() / 10, lastFogDistance, distance);
+        float delta = MinecraftClient.getInstance().getTickDelta();
+
+        distance = MathHelper.lerp(delta / (distance > lastFogDistance ? 20 : 2), lastFogDistance, distance);
+
         lastFogDistance = distance;
 
         RenderSystem.fogMode(GlStateManager.FogMode.LINEAR);
@@ -53,7 +56,7 @@ public class FogRenderer {
     }
 
     private double getLightLevelV(Voidable voidable, World world, Entity entity) {
-        return voidable.isVoidFogDisabled(entity, world) ? 15D : ((int)entity.getY() + 4D);
+        return voidable.isVoidFogDisabled(entity, world) ? 15 : (entity.getY() + 4);
     }
 
     private float getFogDistance(World world, Entity entity) {
@@ -62,7 +65,7 @@ public class FogRenderer {
         float viewDistance = MinecraftClient.getInstance().gameRenderer.getViewDistance();
         double maxHeight = 32 * (world.getDifficulty().getId() + 1);
         double fogDistance = getLightLevelU(entity) / 16D
-                            + getLightLevelV(voidable, world, entity) / maxHeight;
+                           + getLightLevelV(voidable, world, entity) / maxHeight;
 
         if (fogDistance >= 1) {
             return viewDistance;
