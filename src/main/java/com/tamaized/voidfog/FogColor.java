@@ -41,8 +41,7 @@ public class FogColor {
             return 1;
         }
 
-        float light = entity.world.getLightLevel(LightType.SKY, entity.getSenseCenterPos()) / 15F;
-        System.out.println(entity.world.getLightLevel(entity.getSenseCenterPos()));
+        float light = entity.world.getLightLevel(LightType.SKY, entity.getBlockPos()) / 15F;
 
         brightness *= light;
 

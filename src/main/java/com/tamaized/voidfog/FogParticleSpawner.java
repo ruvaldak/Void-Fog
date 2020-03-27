@@ -19,6 +19,7 @@ public class FogParticleSpawner {
     private static final int RADIUS = 16;
 
     private int timeToNextSound = 0;
+    private int insanity;
 
     private final SoundEvent[] events = new SoundEvent[] {
             SoundEvents.ENTITY_POLAR_BEAR_WARNING,
@@ -43,7 +44,7 @@ public class FogParticleSpawner {
             return;
         }
 
-        BlockPos playerPos = entity.getSenseCenterPos();
+        BlockPos playerPos = entity.getBlockPos();
 
         Random rand = world.getRandom();
 
@@ -85,17 +86,21 @@ public class FogParticleSpawner {
                 return;
             }
 
-            timeToNextSound = world.random.nextInt(20 + chance / 3);
+            insanity++;
+            timeToNextSound = world.random.nextInt(Math.max(1, 20 + chance / (3 + insanity)));
 
-            if (world.random.nextInt((int)(100 + chance * 3 * brightness)) == 0) {
-                doAScary(world, entity.getSenseCenterPos());
+            if (world.random.nextInt((int)Math.max(40, 60 + chance * 3 * brightness - insanity)) == 0) {
+                doAScary(world, entity.getBlockPos());
             }
+        } else {
+            insanity = 0;
         }
     }
 
     private void doAScary(World world, BlockPos pos) {
         SoundEvent event = events[world.random.nextInt(events.length)];
-        world.playSound(MinecraftClient.getInstance().player, pos, event, SoundCategory.AMBIENT, 2, 1);
+        float pitch = 1 + world.random.nextFloat();
+        world.playSound(MinecraftClient.getInstance().player, pos, event, SoundCategory.AMBIENT, 2, pitch);
     }
 }
 
