@@ -12,6 +12,7 @@ import com.tamaized.voidfog.VoidFog;
 
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.resource.language.I18n;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.TranslatableText;
 
 class OptionsScreen extends GameGui {
@@ -62,9 +63,9 @@ class OptionsScreen extends GameGui {
     }
 
     @Override
-    public void render(int mouseX, int mouseY, float partialTicks) {
-        renderBackground();
-        super.render(mouseX, mouseY, partialTicks);
+    public void render(MatrixStack matrices, int mouseX, int mouseY, float partialTicks) {
+        renderBackground(matrices);
+        super.render(matrices, mouseX, mouseY, partialTicks);
     }
 
     @Override

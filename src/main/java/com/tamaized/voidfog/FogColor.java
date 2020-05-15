@@ -2,16 +2,16 @@ package com.tamaized.voidfog;
 
 import com.tamaized.voidfog.api.Voidable;
 
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.LightType;
-import net.minecraft.world.World;
 
 public class FogColor {
 
     private double prevBrightness;
 
-    public double getFogBrightness(World world, Entity entity, float delta) {
+    public double getFogBrightness(ClientWorld world, Entity entity, float delta) {
         if (entity.hasVehicle()) {
             entity = entity.getRootVehicle();
         }
@@ -22,7 +22,7 @@ public class FogColor {
         return lerped;
     }
 
-    private double computeBrightness(World world, Entity entity, float delta) {
+    private double computeBrightness(ClientWorld world, Entity entity, float delta) {
 
         if (!VoidFog.config.enabled) {
             return 1;
@@ -35,7 +35,8 @@ public class FogColor {
         }
 
         double yPosition = MathHelper.lerp(delta, entity.prevY, entity.getY());
-        double brightness = yPosition * world.getDimension().getHorizonShadingRatio();
+        double brightness = yPosition * world.getLevelProperties().method_28106();
+     // double brightness = yPosition * world.getLevelProperties().getHorizonShadingRatio();
 
         if (brightness >= 1) {
             return 1;

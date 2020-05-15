@@ -1,11 +1,12 @@
 package com.tamaized.voidfog.api;
 
 import com.tamaized.voidfog.VoidFog;
+
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.level.LevelGeneratorType;
 
 public interface Voidable {
 
@@ -22,9 +23,13 @@ public interface Voidable {
             return false;
         }
 
-        return (world.getLevelProperties().getGeneratorType() != LevelGeneratorType.FLAT
-                && !world.getDimension().isNether()
-            );
+      //return world.isClient
+      //    && ((ClientWorld)world).getLevelProperties().getSkyDarknessHeight() == 0
+      //    && !world.getDimensiomType().isNether();
+
+        return world.isClient
+            && ((ClientWorld)world).getLevelProperties().method_28105() != 0
+            && !world.method_27983().method_27998();
     }
 
     default boolean isVoidFogDisabled(Entity player, World world) {
