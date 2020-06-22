@@ -23,13 +23,9 @@ public interface Voidable {
             return false;
         }
 
-      //return world.isClient
-      //    && ((ClientWorld)world).getLevelProperties().getSkyDarknessHeight() == 0
-      //    && !world.getDimensiomType().isNether();
-
         return world.isClient
-            && ((ClientWorld)world).getLevelProperties().method_28105() != 0
-            && !world.method_27983().method_27998();
+            && ((ClientWorld)world).getLevelProperties().getSkyDarknessHeight() != 0
+            && !world.getDimension().hasCeiling();
     }
 
     default boolean isVoidFogDisabled(Entity player, World world) {

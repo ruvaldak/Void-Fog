@@ -4,9 +4,9 @@ import org.spongepowered.asm.mixin.Mixin;
 
 import com.tamaized.voidfog.api.Voidable;
 
-import net.minecraft.world.dimension.Dimension;
+import net.minecraft.world.dimension.DimensionType;
 
-@Mixin(Dimension.class)
+@Mixin(DimensionType.class)
 abstract class MixinDimension implements Voidable {
 
 }

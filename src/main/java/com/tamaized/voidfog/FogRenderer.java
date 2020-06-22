@@ -16,7 +16,7 @@ public class FogRenderer {
 
     private float lastFogDistance = 1000;
 
-    public void render(Camera camera,  FogType type, float viewDistance, boolean isThick) {
+    public void render(Camera camera,  FogType type, float viewDistance, boolean thickFog) {
 
         if (!VoidFog.config.enabled) {
             return;
@@ -44,8 +44,8 @@ public class FogRenderer {
         lastFogDistance = distance;
 
         RenderSystem.fogMode(GlStateManager.FogMode.LINEAR);
-        RenderSystem.fogStart(getFogStart(distance, type, world, isThick));
-        RenderSystem.fogEnd(getFogEnd(distance, type, world, isThick));
+        RenderSystem.fogStart(getFogStart(distance, type, world, thickFog));
+        RenderSystem.fogEnd(getFogEnd(distance, type, world, thickFog));
         RenderSystem.setupNvFogDistance();
 
         RenderSystem.enableColorMaterial();
@@ -80,8 +80,8 @@ public class FogRenderer {
         return (float)Math.min(viewDistance, Math.max(100 * fogDistance, 5));
     }
 
-    private float getFogStart(float intensity, FogType type, World world, boolean loc) {
-        if (loc) {
+    private float getFogStart(float intensity, FogType type, World world, boolean thickFog) {
+        if (thickFog) {
             return intensity * 0.05F;
         }
 
@@ -92,8 +92,8 @@ public class FogRenderer {
         return intensity * 0.75F;
     }
 
-    private float getFogEnd(float intensity, FogType type, World world, boolean loc) {
-        if (loc) {
+    private float getFogEnd(float intensity, FogType type, World world, boolean thickFog) {
+        if (thickFog) {
             return Math.min(intensity, 192) / 2F;
         }
 

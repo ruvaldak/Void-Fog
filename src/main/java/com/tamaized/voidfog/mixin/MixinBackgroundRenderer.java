@@ -31,8 +31,8 @@ abstract class MixinBackgroundRenderer {
             + "Z"
         + ")V",
             at = @At("RETURN"))
-    private static void onApplyFog(Camera camera, FogType type, float viewDistance, boolean isThick, CallbackInfo info) {
-        VoidFog.renderer.render(camera, type, viewDistance, isThick);
+    private static void onApplyFog(Camera camera, FogType type, float viewDistance, boolean thickFog, CallbackInfo info) {
+        VoidFog.renderer.render(camera, type, viewDistance, thickFog);
     }
 
     @Inject(method = "render("

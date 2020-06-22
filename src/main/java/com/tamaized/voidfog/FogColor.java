@@ -35,8 +35,7 @@ public class FogColor {
         }
 
         double yPosition = MathHelper.lerp(delta, entity.prevY, entity.getY());
-        double brightness = yPosition * world.getLevelProperties().method_28106();
-     // double brightness = yPosition * world.getLevelProperties().getHorizonShadingRatio();
+        double brightness = yPosition * world.getLevelProperties().getHorizonShadingRatio();
 
         if (brightness >= 1) {
             return 1;
