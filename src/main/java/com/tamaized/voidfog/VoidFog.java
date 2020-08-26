@@ -3,9 +3,10 @@ package com.tamaized.voidfog;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.minelittlepony.common.util.GamePaths;
+
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.event.client.ClientTickCallback;
-import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
 
 public class VoidFog implements ClientModInitializer {
@@ -20,8 +21,8 @@ public class VoidFog implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        config = Settings.load(FabricLoader.getInstance().getConfigDirectory().toPath().resolve("voidfog.json"));
-        ClientTickCallback.EVENT.register(this::onTick);
+        config = Settings.load(GamePaths.getConfigDirectory().resolve("voidfog.json"));
+        ClientTickEvents.END_CLIENT_TICK.register(this::onTick);
     }
 
     private void onTick(MinecraftClient client) {
