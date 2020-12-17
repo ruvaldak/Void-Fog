@@ -8,10 +8,20 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+/**
+ * These are the defaults.
+ *
+ * You can choose to implement this interface and override any of these methods
+ * to change how Void Fog interacts with your modded dimension.
+ */
 public interface Voidable {
 
     default int getDepthParticleRate(BlockPos pos) {
         return pos.getY();
+    }
+
+    default boolean hasInsanity(BlockPos pos, World world) {
+        return pos.getY() <= 10 || world.isNight();
     }
 
     default boolean hasDepthFog(Entity entity, World world) {

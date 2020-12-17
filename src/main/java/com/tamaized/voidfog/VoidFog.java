@@ -4,18 +4,21 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.minelittlepony.common.util.GamePaths;
+import com.tamaized.voidfog.api.Voidable;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.entity.Entity;
 
 public class VoidFog implements ClientModInitializer {
 
 	public static final Logger LOGGER = LogManager.getLogger("voidfog");
 
-	public static final FogParticleSpawner particleSpawner = new FogParticleSpawner();
-	public static final FogColor fogColor = new FogColor();
-	public static final FogRenderer renderer = new FogRenderer();
+	public static final FogParticleSpawner PARTICLE_SPAWNER = new FogParticleSpawner();
+	public static final FogColor FOG_COLOR = new FogColor();
+	public static final FogRenderer RENDERER = new FogRenderer();
+	public static final InsanityEngine INSANITY = new InsanityEngine();
 
 	public static Settings config = new Settings();
 
@@ -28,10 +31,21 @@ public class VoidFog implements ClientModInitializer {
     private void onTick(MinecraftClient client) {
         if (!client.isPaused() && client.world != null && client.getCameraEntity() != null) {
             if (config.enabled) {
-                particleSpawner.update(client.world, client.getCameraEntity());
+                Voidable dimension = (Voidable)client.world.getDimension();
+
+                Entity entity = client.getCameraEntity();
+                if (entity.hasVehicle()) {
+                    entity = entity.getRootVehicle();
+                }
+
+                if (!dimension.hasDepthFog(entity, client.world)) {
+                    return;
+                }
+
+                PARTICLE_SPAWNER.update(client.world, entity, dimension);
 
                 if (config.imABigBoi) {
-                    particleSpawner.updateBigBoi(client.world, client.getCameraEntity());
+                    INSANITY.update(client.world, entity, dimension);
                 }
             }
         }

@@ -32,7 +32,7 @@ abstract class MixinBackgroundRenderer {
         + ")V",
             at = @At("RETURN"))
     private static void onApplyFog(Camera camera, FogType type, float viewDistance, boolean thickFog, CallbackInfo info) {
-        VoidFog.renderer.render(camera, type, viewDistance, thickFog);
+        VoidFog.RENDERER.render(camera, type, viewDistance, thickFog);
     }
 
     @Inject(method = "render("
@@ -44,7 +44,7 @@ abstract class MixinBackgroundRenderer {
         + ")V",
             at = @At("RETURN"))
     private static void onUpdateColorNotInWater(Camera camera, float ticks, ClientWorld world, int i, float g, CallbackInfo info) {
-        changeFogColour(VoidFog.fogColor.getFogBrightness(world, camera.getFocusedEntity(), ticks));
+        changeFogColour(VoidFog.FOG_COLOR.getFogBrightness(world, camera.getFocusedEntity(), ticks));
     }
 
     private static void changeFogColour(double factor) {
