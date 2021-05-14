@@ -35,7 +35,7 @@ public interface Voidable {
 
         return world.isClient
             && !entity.isSubmergedInWater()
-            && ((ClientWorld)world).getLevelProperties().getSkyDarknessHeight() != 0
+            && ((ClientWorld)world).getLevelProperties().getSkyDarknessHeight(world) != 0
             && !world.getDimension().hasCeiling();
     }
 

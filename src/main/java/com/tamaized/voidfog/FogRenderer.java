@@ -1,6 +1,5 @@
 package com.tamaized.voidfog;
 
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.tamaized.voidfog.api.Voidable;
 
@@ -43,14 +42,8 @@ public class FogRenderer {
 
         lastFogDistance = distance;
 
-        RenderSystem.fogMode(GlStateManager.FogMode.LINEAR);
-        RenderSystem.fogStart(getFogStart(distance, type, world, thickFog));
-        RenderSystem.fogEnd(getFogEnd(distance, type, world, thickFog));
-        RenderSystem.setupNvFogDistance();
-
-        RenderSystem.enableColorMaterial();
-        RenderSystem.enableFog();
-        RenderSystem.colorMaterial(1028, 4608);
+        RenderSystem.setShaderFogStart(getFogStart(distance, type, world, thickFog));
+        RenderSystem.setShaderFogEnd(getFogEnd(distance, type, world, thickFog));
     }
 
     private int getLightLevelU(Entity entity) {
@@ -77,7 +70,7 @@ public class FogRenderer {
         }
         fogDistance = Math.pow(Math.max(fogDistance, 0), 2);
 
-        return (float)Math.min(viewDistance, Math.max(100 * fogDistance, 5));
+        return (float)MathHelper.clamp(100 * fogDistance, 5, viewDistance);
     }
 
     private float getFogStart(float intensity, FogType type, World world, boolean thickFog) {
