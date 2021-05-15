@@ -9,17 +9,16 @@ import net.minecraft.world.LightType;
 
 public class FogColor {
 
-    private double prevBrightness;
+    private double brightness;
 
     public double getFogBrightness(ClientWorld world, Entity entity, float delta) {
         if (entity.hasVehicle()) {
             entity = entity.getRootVehicle();
         }
 
-        double brightness = computeBrightness(world, entity, delta);
-        double lerped = MathHelper.lerp(delta / (brightness > prevBrightness ? 10 : 2), prevBrightness, brightness);
-        prevBrightness = brightness;
-        return lerped;
+        double prevBrightness = brightness;
+        brightness = computeBrightness(world, entity, delta);
+        return MathHelper.lerp(delta / (brightness > prevBrightness ? 10 : 2), prevBrightness, brightness);
     }
 
     private double computeBrightness(ClientWorld world, Entity entity, float delta) {
@@ -37,13 +36,13 @@ public class FogColor {
         double yPosition = MathHelper.lerp(delta, entity.prevY, entity.getY());
         double brightness = yPosition * world.getLevelProperties().getHorizonShadingRatio();
 
-        if (brightness >= 1) {
-            return 1;
-        }
-
         float light = entity.world.getLightLevel(LightType.SKY, entity.getBlockPos()) / 15F;
 
         brightness *= light;
+
+        if (brightness >= 1) {
+            return 1;
+        }
 
         return Math.pow(Math.max(0, brightness), 3);
     }
