@@ -12,7 +12,7 @@ import net.minecraft.world.World;
 
 public class InsanityEngine {
     private int timeToNextSound = 0;
-    private int insanity;
+    private int insanityBuildUp;
 
     private final SoundEvent[] events = new SoundEvent[] {
             SoundEvents.ENTITY_POLAR_BEAR_WARNING,
@@ -35,23 +35,39 @@ public class InsanityEngine {
             return;
         }
 
-        int chance = 1 + Math.abs(100 * (int)entity.getY());
         float brightness = entity.getBrightnessAtEyes();
 
-        if (brightness <= 0.3F) {
-            if (timeToNextSound-- > 0) {
-                return;
-            }
-
-            insanity++;
-            timeToNextSound = world.random.nextInt(Math.max(1, 20 + chance / (3 + insanity)));
-
-            if (world.random.nextInt((int)Math.max(40, 60 + chance * 3 * brightness - insanity)) == 0) {
-                doAScary(world, entity.getBlockPos());
-            }
-        } else {
-            insanity = 0;
+        if (brightness > 0.3F) {
+            insanityBuildUp = 0;
+            return;
         }
+
+        double y = entity.getY();
+        int rarity = getRarity(y, world);
+
+        insanityBuildUp += y < 0 ? -y : 1;
+
+        if (insanityBuildUp > 100) {
+            timeToNextSound -= insanityBuildUp / 60;
+        }
+
+        if (timeToNextSound-- > 0) {
+            return;
+        }
+
+        timeToNextSound = 20 + rarity + world.random.nextInt(
+                Math.max(250, 120 + rarity)
+        );
+
+        doAScary(world, entity.getBlockPos());
+    }
+
+    private int getRarity(double y, World world) {
+        // higher value = lower probability
+        // max ---- y -0-- min
+        y -= world.getBottomY();
+        y ++;
+        return 1000 * (int)y;
     }
 
     private void doAScary(World world, BlockPos pos) {
