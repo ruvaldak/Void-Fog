@@ -5,8 +5,11 @@ import com.tamaized.voidfog.api.Voidable;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.Camera;
+import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.BackgroundRenderer.FogType;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
@@ -35,8 +38,11 @@ public class FogRenderer {
         }
 
         float distance = getFogDistance(world, entity);
-
         float delta = MinecraftClient.getInstance().getTickDelta();
+
+        if (entity instanceof LivingEntity && ((LivingEntity)entity).hasStatusEffect(StatusEffects.NIGHT_VISION)) {
+            distance *= 4 * GameRenderer.getNightVisionStrength((LivingEntity)entity, delta);
+        }
 
         distance = MathHelper.lerp(delta / (distance > lastFogDistance ? 20 : 2), lastFogDistance, distance);
 
@@ -46,14 +52,14 @@ public class FogRenderer {
         RenderSystem.setShaderFogEnd(getFogEnd(distance, type, world, thickFog));
     }
 
-    private int getLightLevelU(Entity entity) {
+    private int getLight(Entity entity) {
         if (VoidFog.config.respectTorches) {
             return entity.world.getLightLevel(entity.getBlockPos());
         }
         return entity.world.getLightLevel(LightType.SKY, entity.getBlockPos());
     }
 
-    private double getLightLevelV(Voidable voidable, World world, Entity entity) {
+    private double getAltitude(Voidable voidable, World world, Entity entity) {
         return voidable.isVoidFogDisabled(entity, world) ? 15 : (entity.getY() + 4);
     }
 
@@ -62,8 +68,8 @@ public class FogRenderer {
 
         float viewDistance = MinecraftClient.getInstance().gameRenderer.getViewDistance();
         double maxHeight = 32 * (world.getDifficulty().getId() + 1);
-        double fogDistance = getLightLevelU(entity) / 16D
-                           + getLightLevelV(voidable, world, entity) / maxHeight;
+        double fogDistance = getLight(entity) / 16D
+                           + getAltitude(voidable, world, entity) / maxHeight;
 
         if (fogDistance >= 1) {
             return viewDistance;
@@ -73,23 +79,21 @@ public class FogRenderer {
         return (float)MathHelper.clamp(100 * fogDistance, 5, viewDistance);
     }
 
-    private float getFogStart(float intensity, FogType type, World world, boolean thickFog) {
-        if (thickFog) {
-            return intensity * 0.05F;
-        }
-
+    private float getFogStart(float distance, FogType type, World world, boolean thickFog) {
         if (type == FogType.FOG_SKY) {
             return 0;
         }
 
-        return intensity * 0.75F;
-    }
-
-    private float getFogEnd(float intensity, FogType type, World world, boolean thickFog) {
         if (thickFog) {
-            return Math.min(intensity, 192) / 2F;
+            return distance * 0.05F;
         }
 
-        return intensity;
+        float factor = 0.55F * (1 - (distance - 5) / 127F);
+
+        return distance * Math.max(0, factor);
+    }
+
+    private float getFogEnd(float distance, FogType type, World world, boolean thickFog) {
+        return thickFog ? Math.min(distance, 192) / 2F : distance;
     }
 }
