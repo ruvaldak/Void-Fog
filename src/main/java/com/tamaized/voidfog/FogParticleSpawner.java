@@ -27,16 +27,18 @@ public class FogParticleSpawner {
             BlockPos pos = randomPos(rand).subtract(randomPos(rand)).add(playerPos);
             BlockState state = world.getBlockState(pos);
 
-            if (state.isAir()) {
+            if (state.isAir() && world.getFluidState(pos).isEmpty()) {
                 if (rand.nextInt(8 * (world.getDifficulty().getId() + 1)) > dimension.getDepthParticleRate(pos)) {
-                    world.addParticle(ParticleTypes.MYCELIUM,
+                    boolean nearBedrock = dimension.isNearBedrock(pos, world);
+
+                    world.addParticle(nearBedrock ? ParticleTypes.ASH : ParticleTypes.MYCELIUM,
                             pos.getX() + rand.nextFloat(),
                             pos.getY() + rand.nextFloat(),
                             pos.getZ() + rand.nextFloat(),
-                            0, 0, 0);
+                            0,
+                            nearBedrock ? rand.nextFloat() : 0,
+                            0);
                 }
-            } else {
-                state.getBlock().randomDisplayTick(state, world, pos, rand);
             }
         }
     }

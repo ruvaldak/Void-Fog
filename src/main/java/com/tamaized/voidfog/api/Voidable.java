@@ -20,6 +20,10 @@ public interface Voidable {
         return pos.getY();
     }
 
+    default boolean isNearBedrock(BlockPos pos, World world) {
+        return pos.getY() < world.getBottomY() + 6;
+    }
+
     default boolean hasInsanity(BlockPos pos, World world) {
         return pos.getY() <= 10 || world.isNight();
     }
