@@ -3,6 +3,7 @@ package com.tamaized.voidfog.modmenu;
 import javax.annotation.Nullable;
 
 import com.minelittlepony.common.client.gui.GameGui;
+import com.minelittlepony.common.client.gui.element.AbstractSlider;
 import com.minelittlepony.common.client.gui.element.Button;
 import com.minelittlepony.common.client.gui.element.Label;
 import com.minelittlepony.common.client.gui.element.Slider;
@@ -11,8 +12,8 @@ import com.tamaized.voidfog.Settings;
 import com.tamaized.voidfog.VoidFog;
 
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 
 class OptionsScreen extends GameGui {
@@ -29,11 +30,11 @@ class OptionsScreen extends GameGui {
         Settings config = VoidFog.config;
 
         addButton(new Label(width / 2, 30)).setCentered().getStyle()
-                .setText(getTitle().asString());
+                .setText(getTitle());
 
         addButton(new Slider(left, row += 35, 0, 10000, config.voidParticleDensity))
             .onChange(config::setParticleDensity)
-            .setFormatter(this::formatValue);
+            .setTextFormat(this::formatValue);
 
         addButton(new Toggle(left, row += 25, config.enabled))
             .onChange(enabled -> config.enabled = enabled)
@@ -74,19 +75,21 @@ class OptionsScreen extends GameGui {
         super.onClose();
     }
 
-    private String formatValue(float value) {
+    private Text formatValue(AbstractSlider<Float> sender) {
+        float value = sender.getValue();
+
         if (value <= 0) {
-            return "menu.voidfog.particles.min";
+            return new TranslatableText("menu.voidfog.particles.min");
         }
 
         if (value >= 10000) {
-            return "menu.voidfog.particles.max";
+            return new TranslatableText("menu.voidfog.particles.max");
         }
 
         if (value == 1000) {
-            return "menu.voidfog.particles.default";
+            return new TranslatableText("menu.voidfog.particles.default");
         }
 
-        return I18n.translate("menu.voidfog.particles", (int)Math.floor(value));
+        return new TranslatableText("menu.voidfog.particles", (int)Math.floor(value));
     }
 }
