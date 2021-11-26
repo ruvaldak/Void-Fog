@@ -1,12 +1,12 @@
 plugins {
     id 'java-library'
-    id 'fabric-loom' version '0.8-SNAPSHOT'
+    id 'fabric-loom' version '0.10-SNAPSHOT'
     id 'org.ajoberstar.reckon' version '0.13.0'
 }
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(16)
+        languageVersion = JavaLanguageVersion.of(17)
     }
 }
 
@@ -14,8 +14,8 @@ group = project.group
 description = project.displayname
 archivesBaseName = project.name
 
-minecraft {
-    refmapName = 'voidfog.mixin.refmap.json'
+loom {
+    mixin.defaultRefmapName = 'voidfog.mixin.refmap.json'
 }
 
 reckon {
@@ -54,10 +54,10 @@ dependencies {
 }
 
 processResources {
-    inputs.property "version", project.version
+    inputs.property "version", project.version.toString()
 
     filesMatching("fabric.mod.json") {
-        expand "version": project.version
+        expand "version": project.version.toString()
     }
 
     from 'LICENSE'

@@ -5,6 +5,7 @@ import com.tamaized.voidfog.api.Voidable;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.Camera;
+import net.minecraft.client.render.CameraSubmersionType;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.BackgroundRenderer.FogType;
 import net.minecraft.entity.Entity;
@@ -20,7 +21,7 @@ public class FogRenderer {
 
     public void render(Camera camera,  FogType type, float viewDistance, boolean thickFog) {
 
-        if (!VoidFog.config.enabled) {
+        if (!canRenderDepthFog(camera)) {
             return;
         }
 
@@ -50,6 +51,12 @@ public class FogRenderer {
 
         RenderSystem.setShaderFogStart(getFogStart(distance, type, world, thickFog));
         RenderSystem.setShaderFogEnd(getFogEnd(distance, type, world, thickFog));
+    }
+
+    private boolean canRenderDepthFog(Camera camera) {
+        return VoidFog.config.enabled
+                && camera.getSubmersionType() == CameraSubmersionType.NONE
+                && !(camera.getFocusedEntity() instanceof LivingEntity && ((LivingEntity)camera.getFocusedEntity()).hasStatusEffect(StatusEffects.BLINDNESS));
     }
 
     private int getLight(Entity entity) {
