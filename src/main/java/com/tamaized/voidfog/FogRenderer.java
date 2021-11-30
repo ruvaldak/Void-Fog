@@ -67,7 +67,7 @@ public class FogRenderer {
     }
 
     private double getAltitude(Voidable voidable, World world, Entity entity) {
-        return voidable.isVoidFogDisabled(entity, world) ? 15 : (entity.getY() + 4);
+        return voidable.isVoidFogDisabled(entity, world) ? 15 : (entity.getY() + 4 - world.getBottomY());
     }
 
     private float getFogDistance(World world, Entity entity) {
