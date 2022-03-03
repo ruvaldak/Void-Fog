@@ -70,9 +70,9 @@ class OptionsScreen extends GameGui {
     }
 
     @Override
-    public void onClose() {
+    public void close() {
         VoidFog.config.save();
-        super.onClose();
+        super.close();
     }
 
     private Text formatValue(AbstractSlider<Float> sender) {
