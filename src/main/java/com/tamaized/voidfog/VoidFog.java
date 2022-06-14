@@ -31,7 +31,7 @@ public class VoidFog implements ClientModInitializer {
     private void onTick(MinecraftClient client) {
         if (!client.isPaused() && client.world != null && client.getCameraEntity() != null) {
             if (config.enabled) {
-                Voidable dimension = (Voidable)client.world.getDimension();
+                Voidable dimension = Voidable.of(client.world);
 
                 Entity entity = client.getCameraEntity();
                 if (entity.hasVehicle()) {

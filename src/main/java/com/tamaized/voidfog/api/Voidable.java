@@ -15,6 +15,7 @@ import net.minecraft.world.World;
  * to change how Void Fog interacts with your modded dimension.
  */
 public interface Voidable {
+    Voidable EMPTY = new Voidable() {};
 
     default int getDepthParticleRate(BlockPos pos) {
         return pos.getY();
@@ -44,5 +45,12 @@ public interface Voidable {
 
     default boolean isVoidFogDisabled(Entity player, World world) {
         return !hasDepthFog(player, world);
+    }
+
+    static Voidable of(World world) {
+        if (world instanceof Voidable) {
+            return (Voidable)world;
+        }
+        return EMPTY;
     }
 }

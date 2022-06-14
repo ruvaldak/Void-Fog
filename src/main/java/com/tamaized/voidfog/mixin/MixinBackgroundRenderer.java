@@ -29,10 +29,11 @@ abstract class MixinBackgroundRenderer {
             + "Lnet/minecraft/client/render/BackgroundRenderer$FogType;"
             + "F"
             + "Z"
+            + "F"
         + ")V",
             at = @At("RETURN"))
-    private static void onApplyFog(Camera camera, FogType type, float viewDistance, boolean thickFog, CallbackInfo info) {
-        VoidFog.RENDERER.render(camera, type, viewDistance, thickFog);
+    private static void onApplyFog(Camera camera, FogType type, float viewDistance, boolean thickFog, float tickDelta, CallbackInfo info) {
+        VoidFog.RENDERER.render(camera, type, viewDistance, thickFog, tickDelta);
     }
 
     @Inject(method = "render("
@@ -43,8 +44,8 @@ abstract class MixinBackgroundRenderer {
             + "F"
         + ")V",
             at = @At("RETURN"))
-    private static void onUpdateColorNotInWater(Camera camera, float ticks, ClientWorld world, int i, float g, CallbackInfo info) {
-        changeFogColour(VoidFog.FOG_COLOR.getFogBrightness(world, camera.getFocusedEntity(), ticks));
+    private static void onUpdateColorNotInWater(Camera camera, float tickDelta, ClientWorld world, int renderDistance, float skyDarkness, CallbackInfo info) {
+        changeFogColour(VoidFog.FOG_COLOR.getFogBrightness(world, camera.getFocusedEntity(), tickDelta));
     }
 
     private static void changeFogColour(double factor) {

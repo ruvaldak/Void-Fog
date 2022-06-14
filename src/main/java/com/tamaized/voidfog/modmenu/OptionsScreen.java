@@ -14,12 +14,15 @@ import com.tamaized.voidfog.VoidFog;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 
 class OptionsScreen extends GameGui {
+    private static final Text TITLE = Text.translatable("menu.voidfog.title");
+    private static final Text PARTICLES_MIN = Text.translatable("menu.voidfog.particles.min");
+    private static final Text PARTICLES_MAX = Text.translatable("menu.voidfog.particles.max");
+    private static final Text PARTICLES_DEF = Text.translatable("menu.voidfog.particles.default");
 
     public OptionsScreen(@Nullable Screen parent) {
-        super(new TranslatableText("menu.voidfog.title"), parent);
+        super(TITLE, parent);
     }
 
     @Override
@@ -79,17 +82,17 @@ class OptionsScreen extends GameGui {
         float value = sender.getValue();
 
         if (value <= 0) {
-            return new TranslatableText("menu.voidfog.particles.min");
+            return PARTICLES_MIN;
         }
 
         if (value >= 10000) {
-            return new TranslatableText("menu.voidfog.particles.max");
+            return PARTICLES_MAX;
         }
 
         if (value == 1000) {
-            return new TranslatableText("menu.voidfog.particles.default");
+            return PARTICLES_DEF;
         }
 
-        return new TranslatableText("menu.voidfog.particles", (int)Math.floor(value));
+        return Text.translatable("menu.voidfog.particles", (int)Math.floor(value));
     }
 }

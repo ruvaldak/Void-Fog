@@ -19,7 +19,7 @@ public class FogRenderer {
 
     private float lastFogDistance = 1000;
 
-    public void render(Camera camera,  FogType type, float viewDistance, boolean thickFog) {
+    public void render(Camera camera,  FogType type, float viewDistance, boolean thickFog, float delta) {
 
         if (!canRenderDepthFog(camera)) {
             return;
@@ -32,14 +32,13 @@ public class FogRenderer {
         }
 
         World world = entity.getEntityWorld();
-        Voidable voidable = (Voidable)world.getDimension();
+        Voidable voidable = Voidable.of(world);
 
         if (!voidable.hasDepthFog(entity, world)) {
             return;
         }
 
         float distance = getFogDistance(world, entity);
-        float delta = MinecraftClient.getInstance().getTickDelta();
 
         if (entity instanceof LivingEntity && ((LivingEntity)entity).hasStatusEffect(StatusEffects.NIGHT_VISION)) {
             distance *= 4 * GameRenderer.getNightVisionStrength((LivingEntity)entity, delta);
@@ -49,8 +48,8 @@ public class FogRenderer {
 
         lastFogDistance = distance;
 
-        RenderSystem.setShaderFogStart(getFogStart(distance, type, world, thickFog));
-        RenderSystem.setShaderFogEnd(getFogEnd(distance, type, world, thickFog));
+        RenderSystem.setShaderFogStart(Math.min(RenderSystem.getShaderFogStart(), getFogStart(distance, type, world, thickFog)));
+        RenderSystem.setShaderFogEnd(Math.min(RenderSystem.getShaderFogEnd(), getFogEnd(distance, type, world, thickFog)));
     }
 
     private boolean canRenderDepthFog(Camera camera) {
@@ -71,7 +70,7 @@ public class FogRenderer {
     }
 
     private float getFogDistance(World world, Entity entity) {
-        Voidable voidable = (Voidable)world.getDimension();
+        Voidable voidable = Voidable.of(world);
 
         float viewDistance = MinecraftClient.getInstance().gameRenderer.getViewDistance();
         double maxHeight = 32 * (world.getDifficulty().getId() + 1);

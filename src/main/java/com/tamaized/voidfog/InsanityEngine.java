@@ -35,6 +35,7 @@ public class InsanityEngine {
             return;
         }
 
+        @SuppressWarnings("deprecation")
         float brightness = entity.getBrightnessAtEyes();
 
         if (brightness > 0.3F) {

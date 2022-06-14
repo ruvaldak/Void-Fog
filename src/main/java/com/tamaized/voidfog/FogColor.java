@@ -27,7 +27,7 @@ public class FogColor {
             return 1;
         }
 
-        Voidable voidable = (Voidable)world.getDimension();
+        Voidable voidable = Voidable.of(world);
 
         if (voidable.isVoidFogDisabled(entity, world)) {
             return 1;
