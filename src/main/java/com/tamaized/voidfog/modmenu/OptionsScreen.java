@@ -39,7 +39,7 @@ class OptionsScreen extends GameGui {
             .onChange(config::setParticleDensity)
             .setTextFormat(this::formatValue);
 
-        addButton(new Slider(left, row += 25, 0, 383, config.maxFogHeight))
+        addButton(new Slider(left, row += 30, 0, 383, config.maxFogHeight))
             .onChange(config::setFogHeight)
             .setTextFormat(this::formatFogHeight);
 
