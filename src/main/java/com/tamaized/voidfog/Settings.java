@@ -17,6 +17,8 @@ public class Settings {
 
 	public boolean enabled = true;
 
+	public boolean scaleWithDifficulty = true;
+
 	public boolean disableInCreative = true;
 
 	public boolean respectTorches = true;

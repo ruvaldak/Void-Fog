@@ -39,14 +39,19 @@ class OptionsScreen extends GameGui {
             .onChange(config::setParticleDensity)
             .setTextFormat(this::formatValue);
 
-        addButton(new Slider(left, row += 25, 0, 319, config.maxFogHeight))
+        addButton(new Slider(left, row += 25, 0, 383, config.maxFogHeight))
             .onChange(config::setFogHeight)
             .setTextFormat(this::formatFogHeight);
 
-        addButton(new Toggle(left, row += 25, config.enabled))
+        addButton(new Toggle(left, row += 30, config.enabled))
             .onChange(enabled -> config.enabled = enabled)
             .getStyle()
                 .setText("menu.voidfog.enabled");
+
+        addButton(new Toggle(left, row += 25, config.scaleWithDifficulty))
+            .onChange(enabled -> config.scaleWithDifficulty = enabled)
+            .getStyle()
+                .setText("menu.voidfog.scale");
 
         addButton(new Toggle(left, row += 25, config.disableInCreative))
             .onChange(enabled -> config.disableInCreative = enabled)
@@ -101,6 +106,6 @@ class OptionsScreen extends GameGui {
     }
 
     private Text formatFogHeight(AbstractSlider<Float> sender) {
-        return Text.translatable("menu.voidfog.fogheight", (int)Math.floor(sender.getValue()));
+        return Text.translatable("menu.voidfog.fogheight", (int)(double)(sender.getValue())-64);
     }
 }
