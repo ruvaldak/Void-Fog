@@ -23,6 +23,8 @@ public class Settings {
 
 	public int voidParticleDensity = 1000;
 
+	public int maxFogHeight = 32;
+
 	public boolean imABigBoi = false;
 
 	private transient Path path;
@@ -37,6 +39,11 @@ public class Settings {
 	    voidParticleDensity = (int)density;
 
 	    return voidParticleDensity;
+	}
+
+	public float setFogHeight(float height) {
+		maxFogHeight = (int)height;
+		return maxFogHeight;
 	}
 
 	public static Settings load(Path path) {

@@ -7,6 +7,7 @@
 	"menu.voidfog.particles.max": "ALL The Particles",
 	"menu.voidfog.particles.default": "Particles: Default",
 	"menu.voidfog.particles": "Particles: %d",
+	"menu.voidfog.fogheight": "Fog Altitude: %d",
 	"menu.voidfog.bigboi": "Big Boy Mode",
 	"menu.voidfog.bigboi.tooltip": "Makes the game extra scary.\r\nAre you a big boi?"
 }
