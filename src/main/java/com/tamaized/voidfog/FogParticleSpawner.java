@@ -22,7 +22,7 @@ public class FogParticleSpawner {
 
         Random rand = world.getRandom();
 
-        for (int pass = 0; pass < VoidFog.config.voidParticleDensity; pass++) {            
+        for (int pass = 0; pass < VoidFog.config.voidParticleDensity; pass++) {
             BlockPos pos = randomPos(rand).subtract(randomPos(rand)).add(playerPos);
             BlockState state = world.getBlockState(pos);
 
