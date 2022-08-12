@@ -45,19 +45,19 @@ public class FogRenderer {
         }
 
         distance = MathHelper.lerp(delta / (distance > lastFogDistance ? 20 : 2), lastFogDistance, distance);
+        lastFogDistance = distance;
         
         float entityAltitude = (float)getAltitude(voidable, world, entity);
-        float fadeStart = (VoidFog.config.maxFogHeight+VoidFog.config.fadeStartOffset);
-        float entityDelta = 1-((entityAltitude)-VoidFog.config.maxFogHeight)/VoidFog.config.fadeStartOffset;
+        float fadeStart = VoidFog.config.maxFogHeight + VoidFog.config.fadeStartOffset;
+        float entityDelta = 1 - (entityAltitude - VoidFog.config.maxFogHeight) / VoidFog.config.fadeStartOffset;
 
-        lastFogDistance = distance;
-        if((entityAltitude <= ((float)(VoidFog.config.maxFogHeight)))||VoidFog.config.fancierFog) {
+        if((entityAltitude <= VoidFog.config.maxFogHeight) || (VoidFog.config.fancierFog)) {
             RenderSystem.setShaderFogStart(getFogStart(distance, type, world, thickFog));
             RenderSystem.setShaderFogEnd(getFogEnd(distance, type, world, thickFog));
         }
-        else if((entityAltitude <= fadeStart)&&!VoidFog.config.fancierFog) {
-            RenderSystem.setShaderFogStart(MathHelper.lerp(entityDelta,RenderSystem.getShaderFogStart(),getFogStart(distance, type, world, thickFog)));
-            RenderSystem.setShaderFogEnd(MathHelper.lerp(entityDelta,RenderSystem.getShaderFogEnd(),getFogEnd(distance, type, world, thickFog)));
+        else if((entityAltitude <= fadeStart) && (!VoidFog.config.fancierFog)) {
+            RenderSystem.setShaderFogStart(MathHelper.lerp(entityDelta, RenderSystem.getShaderFogStart(), getFogStart(distance, type, world, thickFog)));
+            RenderSystem.setShaderFogEnd(MathHelper.lerp(entityDelta, RenderSystem.getShaderFogEnd(), getFogEnd(distance, type, world, thickFog)));
         }
         else {
             RenderSystem.setShaderFogStart(RenderSystem.getShaderFogStart());
