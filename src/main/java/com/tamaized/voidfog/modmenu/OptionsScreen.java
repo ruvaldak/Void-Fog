@@ -48,10 +48,10 @@ class OptionsScreen extends GameGui {
             .getStyle()
                 .setText("menu.voidfog.enabled");
 
-        addButton(new Toggle(left, row += 25, config.fancierFog))
-                .onChange(enabled -> config.fancierFog = enabled)
+        addButton(new Toggle(left, row += 25, config.alwaysDenseFog))
+                .onChange(enabled -> config.alwaysDenseFog = enabled)
                 .getStyle()
-                    .setText("menu.voidfog.fancierfog");
+                    .setText("menu.voidfog.alwaysDenseFog");
 
         addButton(new Toggle(left, row += 25, config.scaleWithDifficulty))
             .onChange(enabled -> config.scaleWithDifficulty = enabled)
