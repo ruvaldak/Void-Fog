@@ -23,7 +23,7 @@ public class Settings {
 
 	public boolean respectTorches = true;
 
-	public boolean alwaysDenseFog = false;
+	public boolean prettyFog = false;
 
 	public int voidParticleDensity = 1000;
 

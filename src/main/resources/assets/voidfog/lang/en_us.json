@@ -11,6 +11,6 @@
 	"menu.voidfog.fogheight": "Fog Height: %d",
 	"menu.voidfog.bigboi": "Big Boy Mode",
 	"menu.voidfog.bigboi.tooltip": "Makes the game extra scary.\r\nAre you a big boi?",
-	"menu.voidfog.alwaysDenseFog": "Always Dense Fog",
-	"menu.voidfog.alwaysDenseFog.tooltip": "Disables the transition to dense fog.\r\nMakes fog always dense."
+	"menu.voidfog.prettyFog": "Pretty Fog",
+	"menu.voidfog.prettyFog.tooltip": "Enables an alternate fog look"
 }

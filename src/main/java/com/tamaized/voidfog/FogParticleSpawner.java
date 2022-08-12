@@ -24,26 +24,31 @@ public class FogParticleSpawner {
         Random rand = world.getRandom();
 
         float entityAltitude = dimension.isVoidFogDisabled(entity, world) ? 15F : (float)(entity.getY() - world.getBottomY());
-        float fadeStart = VoidFog.config.maxFogHeight + VoidFog.config.fadeStartOffset;
-        float entityDelta = Math.max(0, Math.min(1, (1 - (entityAltitude - VoidFog.config.maxFogHeight) / VoidFog.config.fadeStartOffset)));
+        float fadeStart = VoidFog.config.maxFogHeight;
+        float fadeOffset = VoidFog.config.fadeStartOffset;
+        float fadeEnd = fadeStart - fadeOffset;
+        float entityDelta = Math.max(0, Math.min(1, (1 - (entityAltitude - fadeEnd) / fadeOffset)));
 
-        for (int pass = 0; (pass < VoidFog.config.voidParticleDensity*entityDelta) && (entityAltitude <= fadeStart); pass++) {
-            BlockPos pos = randomPos(rand).subtract(randomPos(rand)).add(playerPos);
-            BlockState state = world.getBlockState(pos);
-            
-            if (state.isAir() && world.getFluidState(pos).isEmpty() && pos.getY()-world.getBottomY() <= fadeStart) {
-                if (rand.nextInt((!VoidFog.config.scaleWithDifficulty) ? 8 : 8 * (world.getDifficulty().getId() + 1)) <= fadeStart) {
-                    boolean nearBedrock = dimension.isNearBedrock(pos, world);
+        for (int pass = 0; (pass < VoidFog.config.voidParticleDensity*entityDelta); pass++) {
+            if(entityAltitude <= fadeStart+fadeOffset) {
+                BlockPos pos = randomPos(rand).subtract(randomPos(rand)).add(playerPos);
+                BlockState state = world.getBlockState(pos);
+                
+                if (state.isAir() && world.getFluidState(pos).isEmpty() && pos.getY()-world.getBottomY() <= fadeStart+fadeOffset) {
+                    if (rand.nextInt((!VoidFog.config.scaleWithDifficulty) ? 8 : 8 * (world.getDifficulty().getId() + 1)) <= fadeStart+fadeOffset) {
+                        boolean nearBedrock = dimension.isNearBedrock(pos, world);
 
-                    world.addParticle(nearBedrock ? ParticleTypes.ASH : ParticleTypes.MYCELIUM,
-                            pos.getX() + rand.nextFloat(),
-                            pos.getY() + rand.nextFloat(),
-                            pos.getZ() + rand.nextFloat(),
-                            0,
-                            nearBedrock ? rand.nextFloat() : 0,
-                            0);
+                        world.addParticle(nearBedrock ? ParticleTypes.ASH : ParticleTypes.MYCELIUM,
+                                pos.getX() + rand.nextFloat(),
+                                pos.getY() + rand.nextFloat(),
+                                pos.getZ() + rand.nextFloat(),
+                                0,
+                                nearBedrock ? rand.nextFloat() : 0,
+                                0);
+                    }
                 }
             }
+            else break;
         }
     }
 }
