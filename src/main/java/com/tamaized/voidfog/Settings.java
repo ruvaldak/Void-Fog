@@ -74,6 +74,7 @@ public class Settings {
 
 	protected void validate() {
 	    voidParticleDensity = Math.max(0, voidParticleDensity);
+		fadeStartOffset = Math.max(0, fadeStartOffset);
 	}
 
 	private Settings save(Path path) {
