@@ -35,7 +35,7 @@ class OptionsScreen extends GameGui {
         addButton(new Label(width / 2, 25)).setCentered().getStyle()
                 .setText(getTitle());
 
-        addButton(new Slider(left, row += 30, 0, 10000, config.voidParticleDensity))
+        addButton(new Slider(left, row += 10, 0, 10000, config.voidParticleDensity))
             .onChange(config::setParticleDensity)
             .setTextFormat(this::formatValue);
 
@@ -75,7 +75,7 @@ class OptionsScreen extends GameGui {
                 .setTooltip("menu.voidfog.bigboi.tooltip")
                 .setText("menu.voidfog.bigboi");
 
-        addButton(new Button(left, row += 44)
+        addButton(new Button(left, row += 35)
             .onClick(sender -> finish()))
             .getStyle()
                 .setText("gui.done");
@@ -112,6 +112,6 @@ class OptionsScreen extends GameGui {
     }
 
     private Text formatFogHeight(AbstractSlider<Float> sender) {
-        return Text.translatable("menu.voidfog.fogheight", (int)(double)(sender.getValue())-64);
+        return Text.translatable("menu.voidfog.fogheight", (int)(double)(sender.getValue()) - 64);
     }
 }

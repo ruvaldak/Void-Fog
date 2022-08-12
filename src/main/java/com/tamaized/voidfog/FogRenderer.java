@@ -48,7 +48,7 @@ public class FogRenderer {
         lastFogDistance = distance;
         
         float entityAltitude = (float)getAltitude(voidable, world, entity);
-        float fadeStart = VoidFog.config.maxFogHeight;
+        int fadeStart = VoidFog.config.maxFogHeight;
         float fadeOffset = VoidFog.config.fadeStartOffset;
         float fadeEnd = fadeStart - fadeOffset;
         float entityDelta = Math.max(0, Math.min(1, (1 - (entityAltitude - fadeEnd) / fadeOffset)));
