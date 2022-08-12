@@ -12,5 +12,5 @@
 	"menu.voidfog.bigboi": "Big Boy Mode",
 	"menu.voidfog.bigboi.tooltip": "Makes the game extra scary.\r\nAre you a big boi?",
 	"menu.voidfog.alwaysDenseFog": "Always Dense Fog",
-	"menu.voidfog.alwaysDenseFog.tooltip": "Disables the transition from vanilla fog to the denser fog, making fog always dense."
+	"menu.voidfog.alwaysDenseFog.tooltip": "Disables the transition to dense fog.\r\nMakes fog always dense."
 }
