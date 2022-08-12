@@ -49,7 +49,7 @@ public class FogRenderer {
         
         float entityAltitude = (float)getAltitude(voidable, world, entity);
         float fadeStart = VoidFog.config.maxFogHeight + VoidFog.config.fadeStartOffset;
-        float entityDelta = 1 - (entityAltitude - VoidFog.config.maxFogHeight) / VoidFog.config.fadeStartOffset;
+        float entityDelta = Math.max(0, Math.min(1, (1 - (entityAltitude - VoidFog.config.maxFogHeight) / VoidFog.config.fadeStartOffset)));
 
         if((entityAltitude <= VoidFog.config.maxFogHeight) || (VoidFog.config.alwaysDenseFog)) {
             RenderSystem.setShaderFogStart(getFogStart(distance, type, world, thickFog));
