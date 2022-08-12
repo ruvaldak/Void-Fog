@@ -30,12 +30,12 @@ public class FogParticleSpawner {
         float entityDelta = Math.max(0, Math.min(1, (1 - (entityAltitude - fadeEnd) / fadeOffset)));
 
         for (int pass = 0; (pass < VoidFog.config.voidParticleDensity*entityDelta); pass++) {
-            if(entityAltitude <= fadeStart+fadeOffset) {
+            if(entityAltitude <= fadeStart) {
                 BlockPos pos = randomPos(rand).subtract(randomPos(rand)).add(playerPos);
                 BlockState state = world.getBlockState(pos);
                 
-                if (state.isAir() && world.getFluidState(pos).isEmpty() && pos.getY()-world.getBottomY() <= fadeStart+fadeOffset) {
-                    if (rand.nextInt((!VoidFog.config.scaleWithDifficulty) ? 8 : 8 * (world.getDifficulty().getId() + 1)) <= fadeStart+fadeOffset) {
+                if (state.isAir() && world.getFluidState(pos).isEmpty() && pos.getY()-world.getBottomY() <= fadeStart) {
+                    if (rand.nextInt((!VoidFog.config.scaleWithDifficulty) ? 8 : 8 * (world.getDifficulty().getId() + 1)) <= fadeStart) {
                         boolean nearBedrock = dimension.isNearBedrock(pos, world);
 
                         world.addParticle(nearBedrock ? ParticleTypes.ASH : ParticleTypes.MYCELIUM,
