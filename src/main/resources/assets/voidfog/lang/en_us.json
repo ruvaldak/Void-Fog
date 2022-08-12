@@ -10,5 +10,6 @@
 	"menu.voidfog.particles": "Particles: %d",
 	"menu.voidfog.fogheight": "Fog Height: %d",
 	"menu.voidfog.bigboi": "Big Boy Mode",
-	"menu.voidfog.bigboi.tooltip": "Makes the game extra scary.\r\nAre you a big boi?"
+	"menu.voidfog.bigboi.tooltip": "Makes the game extra scary.\r\nAre you a big boi?",
+	"menu.voidfog.fancierfog": "Fancier Fog"
 }

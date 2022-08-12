@@ -28,14 +28,14 @@ class OptionsScreen extends GameGui {
     @Override
     public void init() {
         int left =  width / 2 - 100;
-        int row = height / 4 - 24;
+        int row = height / 4 - 25;
 
         Settings config = VoidFog.config;
 
-        addButton(new Label(width / 2, 30)).setCentered().getStyle()
+        addButton(new Label(width / 2, 25)).setCentered().getStyle()
                 .setText(getTitle());
 
-        addButton(new Slider(left, row += 35, 0, 10000, config.voidParticleDensity))
+        addButton(new Slider(left, row += 30, 0, 10000, config.voidParticleDensity))
             .onChange(config::setParticleDensity)
             .setTextFormat(this::formatValue);
 
@@ -47,6 +47,11 @@ class OptionsScreen extends GameGui {
             .onChange(enabled -> config.enabled = enabled)
             .getStyle()
                 .setText("menu.voidfog.enabled");
+
+        addButton(new Toggle(left, row += 25, config.fancierFog))
+                .onChange(enabled -> config.fancierFog = enabled)
+                .getStyle()
+                    .setText("menu.voidfog.fancierfog");
 
         addButton(new Toggle(left, row += 25, config.scaleWithDifficulty))
             .onChange(enabled -> config.scaleWithDifficulty = enabled)

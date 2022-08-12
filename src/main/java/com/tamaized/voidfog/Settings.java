@@ -23,9 +23,13 @@ public class Settings {
 
 	public boolean respectTorches = true;
 
+	public boolean fancierFog = false;
+
 	public int voidParticleDensity = 1000;
 
 	public int maxFogHeight = 32;
+
+	public float fadeStartHeight = 15F; //additive to maxFogHeight, not an absolute height.
 
 	public boolean imABigBoi = false;
 
@@ -45,6 +49,11 @@ public class Settings {
 
 	public float setFogHeight(float height) {
 		maxFogHeight = (int)height;
+		return maxFogHeight;
+	}
+
+	public float setFadeStart(float value) {
+		fadeStartHeight = value;
 		return maxFogHeight;
 	}
 

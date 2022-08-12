@@ -44,12 +44,28 @@ public class FogRenderer {
             distance *= 4 * GameRenderer.getNightVisionStrength((LivingEntity)entity, delta);
         }
 
-        distance = MathHelper.lerp(.05F, lastFogDistance, distance);
+        distance = MathHelper.lerp(delta / (distance > lastFogDistance ? 20 : 2), lastFogDistance, distance);
+
+        
+        //MathHelper.lerp(entityDelta,RenderSystem.getShaderFogStart(),getFogStart(distance, type, world, thickFog))
 
         lastFogDistance = distance;
-
-        RenderSystem.setShaderFogStart(Math.min(RenderSystem.getShaderFogStart(), getFogStart(distance, type, world, thickFog)));
-        RenderSystem.setShaderFogEnd(Math.min(RenderSystem.getShaderFogEnd(), getFogEnd(distance, type, world, thickFog)));
+        if(((float)(entity.getY()-world.getBottomY()) <= ((float)(VoidFog.config.maxFogHeight)))||VoidFog.config.fancierFog) {
+            RenderSystem.setShaderFogStart(getFogStart(distance, type, world, thickFog));
+            RenderSystem.setShaderFogEnd(getFogEnd(distance, type, world, thickFog));
+        }
+        else if(((float)(entity.getY()-world.getBottomY()) <= ((float)(VoidFog.config.maxFogHeight))+VoidFog.config.fadeStartHeight)&&!VoidFog.config.fancierFog) {
+            //float entityAltitude = ((float)(entity.getY()-world.getBottomY()));
+            //float end = VoidFog.config.maxFogHeight;
+            //float start = (VoidFog.config.maxFogHeight+15F);
+            //float entityDelta = 1-(((float)(entity.getY()-world.getBottomY()))-VoidFog.config.maxFogHeight)/15F;
+            RenderSystem.setShaderFogStart(MathHelper.lerp(1-(((float)(entity.getY()-world.getBottomY()))-VoidFog.config.maxFogHeight)/VoidFog.config.fadeStartHeight,RenderSystem.getShaderFogStart(),getFogStart(distance, type, world, thickFog)));
+            RenderSystem.setShaderFogEnd(MathHelper.lerp(1-(((float)(entity.getY()-world.getBottomY()))-VoidFog.config.maxFogHeight)/VoidFog.config.fadeStartHeight,RenderSystem.getShaderFogEnd(),getFogEnd(distance, type, world, thickFog)));
+        }
+        else {
+            RenderSystem.setShaderFogStart(RenderSystem.getShaderFogStart());
+            RenderSystem.setShaderFogEnd(RenderSystem.getShaderFogEnd());
+        }
     }
 
     private boolean canRenderDepthFog(Camera camera) {
@@ -75,13 +91,13 @@ public class FogRenderer {
         float viewDistance = MinecraftClient.getInstance().gameRenderer.getViewDistance();
         double maxHeight = (VoidFog.config.scaleWithDifficulty) ? VoidFog.config.maxFogHeight * (world.getDifficulty().getId() + 1)
                                                                 : VoidFog.config.maxFogHeight;
-        double fogDistance = getLight(entity) / 14D
+        double fogDistance = getLight(entity) / 16D
                            + getAltitude(voidable, world, entity) / maxHeight;
 
         if (fogDistance >= 1) {
             return viewDistance;
         }
-        //fogDistance = Math.pow(Math.max(fogDistance, 0), 2);
+        fogDistance = Math.pow(Math.max(fogDistance, 0), 2);
 
         return (float)MathHelper.clamp(100 * fogDistance, 5, viewDistance);
     }
@@ -95,7 +111,7 @@ public class FogRenderer {
             return distance * 0.05F;
         }
 
-        float factor = (distance - 16F) / 10F;
+        float factor = 0.55F * (1 - (distance - 5) / 127F);
 
         return distance * Math.max(0, factor);
     }
