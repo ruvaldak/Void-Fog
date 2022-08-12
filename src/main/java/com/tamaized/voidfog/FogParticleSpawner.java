@@ -5,6 +5,7 @@ import com.tamaized.voidfog.api.Voidable;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
@@ -22,12 +23,16 @@ public class FogParticleSpawner {
 
         Random rand = world.getRandom();
 
-        for (int pass = 0; pass < VoidFog.config.voidParticleDensity; pass++) {
+        float entityAltitude = dimension.isVoidFogDisabled(entity, world) ? 15F : (float)(entity.getY() - world.getBottomY());
+        float fadeStart = VoidFog.config.maxFogHeight + VoidFog.config.fadeStartOffset;
+        float entityDelta = Math.max(0, Math.min(1, (1 - (entityAltitude - VoidFog.config.maxFogHeight) / VoidFog.config.fadeStartOffset)));
+
+        for (int pass = 0; (pass < VoidFog.config.voidParticleDensity*entityDelta) && (entityAltitude <= fadeStart); pass++) {
             BlockPos pos = randomPos(rand).subtract(randomPos(rand)).add(playerPos);
             BlockState state = world.getBlockState(pos);
-
-            if (state.isAir() && world.getFluidState(pos).isEmpty()) {
-                if (rand.nextInt(8 * (world.getDifficulty().getId() + 1)) > dimension.getDepthParticleRate(pos)) {
+            
+            if (state.isAir() && world.getFluidState(pos).isEmpty() && pos.getY()-world.getBottomY() <= fadeStart) {
+                if (rand.nextInt((!VoidFog.config.scaleWithDifficulty) ? 8 : 8 * (world.getDifficulty().getId() + 1)) <= fadeStart) {
                     boolean nearBedrock = dimension.isNearBedrock(pos, world);
 
                     world.addParticle(nearBedrock ? ParticleTypes.ASH : ParticleTypes.MYCELIUM,
