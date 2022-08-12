@@ -29,7 +29,7 @@ public class Settings {
 
 	public int maxFogHeight = 32;
 
-	public float fadeStartHeight = 15F; //additive to maxFogHeight, not an absolute height.
+	public float fadeStartOffset = 15F; //additive to maxFogHeight, not an absolute height.
 
 	public boolean imABigBoi = false;
 
@@ -53,7 +53,7 @@ public class Settings {
 	}
 
 	public float setFadeStart(float value) {
-		fadeStartHeight = value;
+		fadeStartOffset = value;
 		return maxFogHeight;
 	}
 

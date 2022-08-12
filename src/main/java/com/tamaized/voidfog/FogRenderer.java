@@ -47,8 +47,8 @@ public class FogRenderer {
         distance = MathHelper.lerp(delta / (distance > lastFogDistance ? 20 : 2), lastFogDistance, distance);
         
         float entityAltitude = (float)getAltitude(voidable, world, entity);
-        float fadeStart = (VoidFog.config.maxFogHeight+VoidFog.config.fadeStartHeight);
-        float entityDelta = 1-((entityAltitude)-VoidFog.config.maxFogHeight)/VoidFog.config.fadeStartHeight;
+        float fadeStart = (VoidFog.config.maxFogHeight+VoidFog.config.fadeStartOffset);
+        float entityDelta = 1-((entityAltitude)-VoidFog.config.maxFogHeight)/VoidFog.config.fadeStartOffset;
 
         lastFogDistance = distance;
         if((entityAltitude <= ((float)(VoidFog.config.maxFogHeight)))||VoidFog.config.fancierFog) {
